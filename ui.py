@@ -10,11 +10,8 @@ class UI:
         self.active_slider = None  # Track which slider is active
 
     def draw_slider(self, screen, slider_pos, slider_width, slider_height, indicator_radius, value, min_value, max_value, label, input_value, input_active):
-        # Adjust slider height for a larger clickable area without changing visual appearance
-        clickable_height = int(slider_height * 1.5)  # Increase the clickable area by 50%
-
         # Draw slider background
-        pygame.draw.rect(screen, self.gray, (slider_pos[0], slider_pos[1] - clickable_height // 2, slider_width, clickable_height))
+        pygame.draw.rect(screen, self.gray, (slider_pos[0], slider_pos[1] - slider_height // 2, slider_width, slider_height))
         
         # Calculate the position of the indicator based on value
         indicator_pos_x = slider_pos[0] + ((value - min_value) / (max_value - min_value)) * slider_width
@@ -35,8 +32,7 @@ class UI:
         label_text = self.font.render(label, True, self.black)
         screen.blit(label_text, (slider_pos[0] - 60, slider_pos[1] - slider_height // 2))
 
-        # Return the updated rectangle area for the slider (used for detection)
-        return pygame.Rect(slider_pos[0], slider_pos[1] - clickable_height // 2, slider_width, clickable_height)
+        return text_box_rect
 
     def adjust_value(self, pos, slider_pos, slider_width, min_value, max_value):
         # Adjust value based on mouse position
