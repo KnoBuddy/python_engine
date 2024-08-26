@@ -7,10 +7,14 @@ class UI:
         self.black = (0, 0, 0)
         self.gray = (200, 200, 200)
         self.box_color = (150, 150, 150)
+        self.active_slider = None  # Track which slider is active
 
     def draw_slider(self, screen, slider_pos, slider_width, slider_height, indicator_radius, value, min_value, max_value, label, input_value, input_active):
+        # Adjust slider height for a larger clickable area without changing visual appearance
+        clickable_height = int(slider_height * 1.5)  # Increase the clickable area by 50%
+
         # Draw slider background
-        pygame.draw.rect(screen, self.gray, (slider_pos[0], slider_pos[1] - slider_height // 2, slider_width, slider_height))
+        pygame.draw.rect(screen, self.gray, (slider_pos[0], slider_pos[1] - clickable_height // 2, slider_width, clickable_height))
         
         # Calculate the position of the indicator based on value
         indicator_pos_x = slider_pos[0] + ((value - min_value) / (max_value - min_value)) * slider_width
@@ -31,7 +35,8 @@ class UI:
         label_text = self.font.render(label, True, self.black)
         screen.blit(label_text, (slider_pos[0] - 60, slider_pos[1] - slider_height // 2))
 
-        return text_box_rect
+        # Return the updated rectangle area for the slider (used for detection)
+        return pygame.Rect(slider_pos[0], slider_pos[1] - clickable_height // 2, slider_width, clickable_height)
 
     def adjust_value(self, pos, slider_pos, slider_width, min_value, max_value):
         # Adjust value based on mouse position
@@ -74,10 +79,19 @@ class UI:
 
     def handle_slider_movement(self, event, rpm_slider_rect, speed_slider_rect, rpm, speed_factor):
         mouse_pos = pygame.mouse.get_pos()
-        if event.type == pygame.MOUSEMOTION or event.type == pygame.MOUSEBUTTONDOWN:
-            if pygame.mouse.get_pressed()[0]:  # If the left mouse button is pressed
-                if rpm_slider_rect.collidepoint(mouse_pos):
-                    rpm = self.adjust_value(mouse_pos, rpm_slider_rect.topleft, rpm_slider_rect.width, 0, 5000)
-                elif speed_slider_rect.collidepoint(mouse_pos):
-                    speed_factor = self.adjust_value(mouse_pos, speed_slider_rect.topleft, speed_slider_rect.width, 0.01, 1.0)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if rpm_slider_rect.collidepoint(mouse_pos):
+                self.active_slider = 'rpm'
+            elif speed_slider_rect.collidepoint(mouse_pos):
+                self.active_slider = 'speed'
+
+        if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0]:  # If dragging
+            if self.active_slider == 'rpm':
+                rpm = self.adjust_value(mouse_pos, rpm_slider_rect.topleft, rpm_slider_rect.width, 0, 5000)
+            elif self.active_slider == 'speed':
+                speed_factor = self.adjust_value(mouse_pos, speed_slider_rect.topleft, speed_slider_rect.width, 0.01, 1.0)
+
+        if event.type == pygame.MOUSEBUTTONUP:
+            self.active_slider = None  # Reset active slider when mouse is released
+
         return rpm, speed_factor
