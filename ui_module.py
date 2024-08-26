@@ -27,7 +27,7 @@ class UI:
         # Display the current value with manual input
         value_text = self.font.render(input_value, True, self.red if input_active else self.black)
         screen.blit(value_text, (slider_pos[0] + slider_width + 20, slider_pos[1] - slider_height // 2))
-        
+
         # Display the label
         label_text = self.font.render(label, True, self.black)
         screen.blit(label_text, (slider_pos[0] - 60, slider_pos[1] - slider_height // 2))
@@ -37,56 +37,46 @@ class UI:
 
         return text_box_rect, clickable_rect
 
-
     def adjust_value(self, pos, slider_pos, slider_width, min_value, max_value):
         # Adjust value based on mouse position
         relative_pos = pos[0] - slider_pos[0]
         return max(min_value, min(max_value, (relative_pos / slider_width) * (max_value - min_value) + min_value))
 
     def handle_text_input(self, event, input_active, input_value, allowed_chars="0123456789."):
+        # Handle text input for the active input box
         if input_active:
             if event.key == pygame.K_BACKSPACE:
                 input_value = input_value[:-1]
             elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
-                return False, input_value  # Deactivate input and keep the value
+                return False, input_value  # Return false to deactivate input and keep the value
             else:
                 char = event.unicode
                 if char in allowed_chars:
                     input_value += char
         return input_active, input_value
 
-
-    def handle_mouse_click(self, event, rpm_text_box_rect, speed_text_box_rect, rpm_input_value, speed_input_value, rpm_input_active, speed_input_active):
+    def handle_mouse_click(self, event, rpm_text_box_rect, speed_text_box_rect, rpm_input_value, speed_input_value, rpm_input_active, speed_input_active, rpm_previous_value, speed_previous_value):
         mouse_pos = event.pos
         if rpm_text_box_rect.collidepoint(mouse_pos):
             rpm_input_active = True
             rpm_input_value = ''  # Clear the text box when clicked
-        elif speed_text_box_rect.collidepoint(mouse_pos):
+        else:
+            rpm_input_active = False
+            rpm_input_value = rpm_previous_value  # Restore previous value if clicked away
+        if speed_text_box_rect.collidepoint(mouse_pos):
             speed_input_active = True
             speed_input_value = ''  # Clear the text box when clicked
         else:
-            rpm_input_active = False
             speed_input_active = False
+            speed_input_value = speed_previous_value  # Restore previous value if clicked away
         return rpm_input_active, speed_input_active, rpm_input_value, speed_input_value
-
-
-    def reset_slider_value(self, slider_name):
-        if slider_name == 'rpm':
-            return 1000  # Default value for RPM
-        elif slider_name == 'speed':
-            return 1.0  # Default value for speed factor
-        return 0
 
     def revert_text_if_inactive(self, rpm_input_active, speed_input_active, rpm_input_value, speed_input_value, rpm_previous_value, speed_previous_value):
         if not rpm_input_active:
             rpm_input_value = rpm_previous_value  # Revert to previous value if inactive
-        else:
-            rpm_previous_value = rpm_input_value  # Update previous value if active
         if not speed_input_active:
             speed_input_value = speed_previous_value  # Revert to previous value if inactive
-        else:
-            speed_previous_value = speed_input_value  # Update previous value if active
-        return rpm_input_value, speed_input_value, rpm_previous_value, speed_previous_value
+        return rpm_input_value, speed_input_value
 
     def handle_slider_movement(self, event, rpm_clickable_rect, speed_clickable_rect, rpm, speed_factor):
         mouse_pos = pygame.mouse.get_pos()
