@@ -67,8 +67,18 @@ while running:
                         speed_factor = 0.01
                     speed_previous_value = speed_input_value
 
-        # Handle slider movement
-        rpm, speed_factor = ui.handle_slider_movement(event, rpm_clickable_rect, speed_clickable_rect, rpm, speed_factor)
+        # Handle slider movement and update text accordingly
+        new_rpm, new_speed_factor = ui.handle_slider_movement(event, rpm_clickable_rect, speed_clickable_rect, rpm, speed_factor)
+
+        if new_rpm != rpm:
+            rpm = new_rpm
+            rpm_input_value = str(int(rpm))
+            rpm_previous_value = rpm_input_value  # Update previous value when slider is moved
+
+        if new_speed_factor != speed_factor:
+            speed_factor = new_speed_factor
+            speed_input_value = f"{speed_factor:.2f}"
+            speed_previous_value = speed_input_value  # Update previous value when slider is moved
 
     # Revert text if input box is deactivated
     rpm_input_value, speed_input_value = ui.revert_text_if_inactive(
@@ -81,9 +91,7 @@ while running:
     engine.update_pressure()
 
     # Draw engine components
-    crank_x, crank_y = engine.draw_crankshaft(screen)
-    engine.draw_piston(screen, crank_x, crank_y)
-    engine.draw_cylinder_head(screen)
+    engine.draw_engine(screen)
     
     pygame.display.flip()
     clock.tick(60)

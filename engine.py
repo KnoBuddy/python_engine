@@ -34,3 +34,11 @@ class Engine:
         pygame.draw.rect(screen, (200, 200, 200), (head_x, head_y, self.piston_width, 20))
         pygame.draw.circle(screen, (0, 0, 0), (head_x + 20, head_y + 10), 10)
         pygame.draw.circle(screen, (0, 0, 0), (head_x + 40, head_y + 10), 10)
+
+    def draw_engine(self, screen):
+        # Draw the entire engine components
+        crank_x, crank_y = self.draw_crankshaft(screen)
+        self.draw_piston(screen, crank_x, crank_y)
+        self.draw_crankshaft(screen)
+        self.draw_crankshaft(screen)
+        self.draw_cylinder_head(screen)
