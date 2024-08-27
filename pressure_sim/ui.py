@@ -266,6 +266,10 @@ class UIDiagnostics:
             button_text = key.replace('_', ' ').title()
             screen.blit(self.font.render(button_text, True, (0, 0, 0)), (rect.x + 10, rect.y + 5))
 
+    def update_particles(self):
+        # Recreate particles if the mass or temperature changes significantly
+        self.particles = self.create_particles()
+
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             for key, rect in self.buttons.items():
