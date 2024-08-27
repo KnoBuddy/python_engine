@@ -2,6 +2,7 @@ import random
 import math
 import pygame
 from concurrent.futures import ThreadPoolExecutor
+from collections import defaultdict
 
 class Particle:
     def __init__(self, x, y, z, container_rect, temperature, pressure_ratio=1.0, angle_offset=0):
@@ -73,25 +74,32 @@ class Particle:
         dy = self.y - other.y
         dz = self.z - other.z
         distance = math.sqrt(dx**2 + dy**2 + dz**2)
-        if distance == 0:
-            return
+        
+        if distance < 2.0:  # Assuming particles have a diameter of 2 units
+            overlap = 2.0 - distance
+            nx = dx / distance
+            ny = dy / distance
+            nz = dz / distance
 
-        nx = dx / distance
-        ny = dy / distance
-        nz = dz / distance
+            self.x += nx * overlap / 2
+            self.y += ny * overlap / 2
+            self.z += nz * overlap / 2
+            other.x -= nx * overlap / 2
+            other.y -= ny * overlap / 2
+            other.z -= nz * overlap / 2
 
-        dvx = self.vx - other.vx
-        dvy = self.vy - other.vy
-        dvz = self.vz - other.vz
+            dvx = self.vx - other.vx
+            dvy = self.vy - other.vy
+            dvz = self.vz - other.vz
 
-        dot = dvx * nx + dvy * ny + dvz * nz
+            dot = dvx * nx + dvy * ny + dvz * nz
 
-        self.vx -= dot * nx
-        self.vy -= dot * ny
-        self.vz -= dot * nz
-        other.vx += dot * nx
-        other.vy += dot * ny
-        other.vz += dot * nz
+            self.vx -= dot * nx
+            self.vy -= dot * ny
+            self.vz -= dot * nz
+            other.vx += dot * nx
+            other.vy += dot * ny
+            other.vz += dot * nz
 
     def draw(self, screen):
         if self.alpha > 0:
@@ -127,7 +135,10 @@ class UIDiagnostics:
         }
 
         # Create a fixed ThreadPoolExecutor for the entire simulation
-        self.executor = ThreadPoolExecutor(max_workers=16)  # Adjust the number of workers as needed
+        self.executor = ThreadPoolExecutor(max_workers=16)  # Using 16 workers as per your setup
+
+        # Define the grid size for spatial partitioning
+        self.grid_size = 8  # Adjust this value based on your container size and performance needs
 
     def create_particles(self, count=None, near_valve=False, pressure_ratio=1.0):
         if count is None:
@@ -195,22 +206,54 @@ class UIDiagnostics:
         self.container_rect.width = self.inner_rect.width + 10
         self.container_rect.height = self.inner_rect.height + 10
 
-        num_threads = 16  # Number of threads to use, matching the executor
-        chunk_size = len(self.particles) // num_threads
-        particle_chunks = [self.particles[i:i + chunk_size] for i in range(0, len(self.particles), chunk_size)]
+        # Create a dictionary to hold particles in each grid cell
+        grid = defaultdict(list)
 
-        def update_chunk(particles):
-            for i, particle in enumerate(particles):
-                for j in range(i + 1, len(particles)):
-                    particle.collide_with(particles[j])
+        # Calculate the grid coordinates for each particle and assign them to the grid
+        for particle in self.particles:
+            grid_x = int((particle.x - self.container_rect.left) / self.grid_size)
+            grid_y = int((particle.y - self.container_rect.top) / self.grid_size)
+            grid[(grid_x, grid_y)].append(particle)
+
+        # Function to update and check collisions within a grid cell and its neighbors
+        def update_grid_cell(cell_key):
+            particles_in_cell = grid[cell_key]
+            
+            # Check collisions within the same cell
+            for i, particle in enumerate(particles_in_cell):
+                for j in range(i + 1, len(particles_in_cell)):
+                    particle.collide_with(particles_in_cell[j])
+                particle.move()
+            
+            # Check collisions with particles in neighboring cells
+            neighbors = [
+                (cell_key[0] - 1, cell_key[1] - 1), (cell_key[0], cell_key[1] - 1), (cell_key[0] + 1, cell_key[1] - 1),
+                (cell_key[0] - 1, cell_key[1]),                                   (cell_key[0] + 1, cell_key[1]),
+                (cell_key[0] - 1, cell_key[1] + 1), (cell_key[0], cell_key[1] + 1), (cell_key[0] + 1, cell_key[1] + 1)
+            ]
+
+            # Ensure particles are only checked once per neighboring pair
+            for neighbor_key in neighbors:
+                if neighbor_key in grid:
+                    neighbor_particles = grid[neighbor_key]
+                    for particle in particles_in_cell:
+                        for neighbor_particle in neighbor_particles:
+                            if particle.x < neighbor_particle.x:  # To avoid double-checking
+                                particle.collide_with(neighbor_particle)
+
+            # Move particles after collision checks
+            for particle in particles_in_cell:
                 particle.move()
 
-        # Use the persistent ThreadPoolExecutor for parallel updates
-        self.executor.map(update_chunk, particle_chunks)
 
+        # Use the persistent ThreadPoolExecutor to parallelize the updates
+        self.executor.map(update_grid_cell, grid.keys())
+
+        # Update particles moving outward
         for particle in self.particles_moving_outward:
             particle.move_outward()
 
+        # Remove particles that are fully faded out
         self.particles_moving_outward = [p for p in self.particles_moving_outward if p.alpha > 0]
 
     def draw(self, screen):

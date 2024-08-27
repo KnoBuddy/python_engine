@@ -10,7 +10,7 @@ screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Gas Simulation")
 
 # Initialize gas simulation and clock
-gas_sim = GasSimulation(initial_volume=10.0, initial_temperature=300, initial_mass=5.0)
+gas_sim = GasSimulation(initial_volume=10.0, initial_temperature=300, initial_mass=10.0)
 clock = pygame.time.Clock()
 ui = UIDiagnostics(gas_sim, clock)
 
