@@ -15,6 +15,7 @@ clock = pygame.time.Clock()
 # Initialize UI and Engine
 ui = UI()
 engine = OttoCycle(crank_radius=100, rod_length=200, piston_width=60, piston_height=100, crank_center_x=width // 2, crank_center_y=height // 2 - 50)
+sound = EngineSound()
 
 # Main loop
 running = True
@@ -43,13 +44,11 @@ while running:
             rpm_input_active, speed_input_active, rpm_input_value, speed_input_value = ui.handle_mouse_click(
                 event, rpm_text_box_rect, speed_text_box_rect, rpm_input_value, speed_input_value, rpm_input_active, speed_input_active, rpm_previous_value, speed_previous_value
             )
-            print(f"Clicked: RPM Active: {rpm_input_active}, Speed Active: {speed_input_active}")  # Diagnostic print
 
         elif event.type == pygame.KEYDOWN:
             # Handle text input in the text boxes
             if rpm_input_active:
                 rpm_input_active, rpm_input_value = ui.handle_text_input(event, rpm_input_active, rpm_input_value)
-                print(f"RPM Input Value: {rpm_input_value}")  # Diagnostic print
                 if not rpm_input_active:
                     try:
                         rpm = int(rpm_input_value)
@@ -59,7 +58,6 @@ while running:
 
             if speed_input_active:
                 speed_input_active, speed_input_value = ui.handle_text_input(event, speed_input_active, speed_input_value)
-                print(f"Speed Input Value: {speed_input_value}")  # Diagnostic print
                 if not speed_input_active:
                     try:
                         speed_factor = float(speed_input_value)
@@ -89,6 +87,7 @@ while running:
     angular_velocity = (rpm / 60.0) * 2 * math.pi  # Convert RPM to radians per second
     engine.update_angle(angular_velocity, speed_factor)
     engine.update_pressure()
+    engine.update_sound()
 
     # Draw engine components
     engine.draw_engine(screen)
