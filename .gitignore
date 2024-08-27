@@ -1,3 +1,6 @@
+# Ignore all txt files in all directories
+*.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
