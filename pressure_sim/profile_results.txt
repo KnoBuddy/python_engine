@@ -1,58 +1,58 @@
-         27832330 function calls in 179.405 seconds
+         241068 function calls in 1.687 seconds
 
    Ordered by: cumulative time
    List reduced from 63 to 50 due to restriction <50>
 
    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
-        1    0.086    0.086  179.405  179.405 main.py:18(run_simulation)
-     8926  122.591    0.014  122.591    0.014 {built-in method pygame.display.flip}
-     8926   38.177    0.004   38.177    0.004 {method 'tick' of 'pygame.time.Clock' objects}
-     8926    2.114    0.000   16.426    0.002 ui.py:216(draw)
-  8390440    6.959    0.000   12.622    0.000 ui.py:96(draw)
-  8488626    3.488    0.000    3.488    0.000 {method 'blit' of 'pygame.surface.Surface' objects}
-  8390440    2.791    0.000    2.791    0.000 {built-in method pygame.draw.circle}
-     8926    0.086    0.000    1.640    0.000 ui.py:191(update)
-     8926    0.020    0.000    1.494    0.000 _base.py:583(map)
-     8926    0.083    0.000    1.474    0.000 _base.py:608(<listcomp>)
-   151742    0.268    0.000    1.391    0.000 thread.py:161(submit)
-   151742    0.045    0.000    0.684    0.000 thread.py:180(_adjust_thread_count)
-    80334    0.616    0.000    0.616    0.000 {built-in method pygame.draw.rect}
-   151742    0.103    0.000    0.488    0.000 threading.py:433(acquire)
-    98186    0.430    0.000    0.430    0.000 {method 'render' of 'pygame.font.Font' objects}
-   151742    0.094    0.000    0.378    0.000 _base.py:328(__init__)
-   151758    0.029    0.000    0.347    0.000 threading.py:264(__enter__)
-   151758    0.318    0.000    0.318    0.000 {method '__enter__' of '_thread.lock' objects}
-   151758    0.146    0.000    0.284    0.000 threading.py:236(__init__)
-     8926    0.266    0.000    0.266    0.000 {method 'fill' of 'pygame.surface.Surface' objects}
-       16    0.000    0.000    0.151    0.009 threading.py:938(start)
-       48    0.000    0.000    0.151    0.003 threading.py:288(wait)
-       16    0.000    0.000    0.151    0.009 threading.py:604(wait)
-      192    0.151    0.001    0.151    0.001 {method 'acquire' of '_thread.lock' objects}
-     8926    0.142    0.000    0.142    0.000 {built-in method pygame.event.get}
-   151742    0.138    0.000    0.138    0.000 threading.py:90(RLock)
-     8926    0.052    0.000    0.052    0.000 ui.py:200(<listcomp>)
-        1    0.052    0.052    0.052    0.052 {built-in method pygame.base.quit}
-   151758    0.030    0.000    0.038    0.000 threading.py:267(__exit__)
-   151742    0.027    0.000    0.027    0.000 thread.py:47(__init__)
-   455242    0.027    0.000    0.027    0.000 {method '__exit__' of '_thread.lock' objects}
-     8926    0.014    0.000    0.025    0.000 gas.py:15(update)
-   151742    0.016    0.000    0.016    0.000 {method 'put' of '_queue.SimpleQueue' objects}
-    53556    0.013    0.000    0.013    0.000 {method 'title' of 'str' objects}
-    53556    0.011    0.000    0.011    0.000 {method 'replace' of 'str' objects}
-     8926    0.011    0.000    0.011    0.000 gas.py:9(calculate_pressure)
-    17884    0.004    0.000    0.004    0.000 {built-in method builtins.len}
-     8926    0.004    0.000    0.004    0.000 _base.py:612(result_iterator)
-     8926    0.002    0.000    0.002    0.000 {method 'items' of 'dict' objects}
-     8926    0.001    0.000    0.001    0.000 {method 'get_fps' of 'pygame.time.Clock' objects}
-     8926    0.001    0.000    0.001    0.000 ui.py:214(<listcomp>)
+        1    0.001    0.001    1.687    1.687 main.py:18(run_simulation)
+       77    0.938    0.012    0.938    0.012 {built-in method pygame.display.flip}
+       77    0.285    0.004    0.285    0.004 {method 'tick' of 'pygame.time.Clock' objects}
+       77    0.001    0.000    0.163    0.002 ui.py:191(update)
+       77    0.000    0.000    0.162    0.002 _base.py:583(map)
+       77    0.001    0.000    0.162    0.002 _base.py:608(<listcomp>)
+     1309    0.002    0.000    0.161    0.000 thread.py:161(submit)
+     1309    0.000    0.000    0.155    0.000 thread.py:180(_adjust_thread_count)
+       16    0.000    0.000    0.153    0.010 threading.py:938(start)
+       44    0.000    0.000    0.152    0.003 threading.py:288(wait)
+       16    0.000    0.000    0.152    0.009 threading.py:604(wait)
+      176    0.152    0.001    0.152    0.001 {method 'acquire' of '_thread.lock' objects}
+       77    0.019    0.000    0.145    0.002 ui.py:216(draw)
+       77    0.115    0.001    0.115    0.001 {built-in method pygame.event.get}
+    72380    0.060    0.000    0.108    0.000 ui.py:96(draw)
+        1    0.038    0.038    0.038    0.038 {built-in method pygame.base.quit}
+    73227    0.030    0.000    0.030    0.000 {method 'blit' of 'pygame.surface.Surface' objects}
+    72380    0.024    0.000    0.024    0.000 {built-in method pygame.draw.circle}
+      847    0.006    0.000    0.006    0.000 {method 'render' of 'pygame.font.Font' objects}
+      693    0.005    0.000    0.005    0.000 {built-in method pygame.draw.rect}
+     1309    0.001    0.000    0.003    0.000 _base.py:328(__init__)
+     1325    0.001    0.000    0.002    0.000 threading.py:236(__init__)
+       77    0.002    0.000    0.002    0.000 {method 'fill' of 'pygame.surface.Surface' objects}
+     1309    0.001    0.000    0.002    0.000 threading.py:433(acquire)
+     1309    0.001    0.000    0.001    0.000 threading.py:90(RLock)
        16    0.001    0.000    0.001    0.000 {built-in method _thread.start_new_thread}
+       77    0.000    0.000    0.000    0.000 ui.py:200(<listcomp>)
+     1325    0.000    0.000    0.000    0.000 threading.py:264(__enter__)
+     1325    0.000    0.000    0.000    0.000 threading.py:267(__exit__)
        16    0.000    0.000    0.000    0.000 threading.py:849(__init__)
+     1309    0.000    0.000    0.000    0.000 thread.py:47(__init__)
+     3943    0.000    0.000    0.000    0.000 {method '__exit__' of '_thread.lock' objects}
+       77    0.000    0.000    0.000    0.000 gas.py:15(update)
+     1309    0.000    0.000    0.000    0.000 {method 'put' of '_queue.SimpleQueue' objects}
+     1325    0.000    0.000    0.000    0.000 {method '__enter__' of '_thread.lock' objects}
+      462    0.000    0.000    0.000    0.000 {method 'title' of 'str' objects}
        16    0.000    0.000    0.000    0.000 threading.py:555(__init__)
-       64    0.000    0.000    0.000    0.000 {built-in method _thread.allocate_lock}
-       67    0.000    0.000    0.000    0.000 ui.py:251(handle_event)
-       48    0.000    0.000    0.000    0.000 threading.py:279(_is_owned)
-       48    0.000    0.000    0.000    0.000 threading.py:276(_acquire_restore)
-       16    0.000    0.000    0.000    0.000 weakref.py:427(__setitem__)
+      462    0.000    0.000    0.000    0.000 {method 'replace' of 'str' objects}
+       77    0.000    0.000    0.000    0.000 gas.py:9(calculate_pressure)
+       60    0.000    0.000    0.000    0.000 {built-in method _thread.allocate_lock}
+      182    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+       77    0.000    0.000    0.000    0.000 _base.py:612(result_iterator)
+       47    0.000    0.000    0.000    0.000 ui.py:251(handle_event)
+       44    0.000    0.000    0.000    0.000 threading.py:276(_acquire_restore)
        16    0.000    0.000    0.000    0.000 _weakrefset.py:85(add)
+       16    0.000    0.000    0.000    0.000 weakref.py:427(__setitem__)
+       44    0.000    0.000    0.000    0.000 threading.py:279(_is_owned)
+       77    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+       16    0.000    0.000    0.000    0.000 threading.py:1317(_make_invoke_excepthook)
+       44    0.000    0.000    0.000    0.000 threading.py:273(_release_save)
 
 
